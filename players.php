@@ -21,7 +21,9 @@
                 
                     function makeUrl($stat, $sort = "", $name = "")
                     {
-                        return "\"".$_SERVER["PHP_SELF"]."?stat=$stat".(empty($sort) ? "" : "&sort=$sort").(empty($name) ? "" : "&name=$name")."\"";
+                        return "\"".$_SERVER["PHP_SELF"]."?stat=$stat"
+                               .(empty($sort) ? "" : "&sort=$sort")
+                               .(empty($name) ? "" : "&name=$name")."\"";
                     }
                     
                     function formatValue($value, $type)
@@ -32,11 +34,15 @@
                                 return $value > 1000000 ?
                                     number_format($value / 100000, 1, ",", "'")." $type" :
                                     number_format($value / 100, 0, ",", "'")." m";
+                                    
                             case "h":
-                                return ($value > 72000 ? number_format($value / 72000, 0, ",", "'")." $type " : "")
+                                return ($value > 72000 ? 
+                                    number_format($value / 72000, 0, ",", "'")." $type " : "")
                                     .number_format(($value / 1200) % 60, 0, ",", "'")." min";
+                                    
                             case "♥":
                                 return number_format($value / 2, $value % 2 ? 1 : 0, ",", "'")." $type";
+                                
                             default:
                                 return number_format($value, 0, ",", "'")." $type";
                         }
@@ -53,7 +59,7 @@
                     
                     if(!file_exists($statFilename))
                     {
-                        echo "Erreur : statistiques introuvables \"$statCat\"";
+                        echo "Erreur : catégorie introuvables \"$statCat\"";
                         exit;
                     }
                     
@@ -63,9 +69,8 @@
                     $addCategory = function($name, $title)
                     {
                         global $statCat;
-                        echo "<th".($statCat == $name ? " id=\"sorted\"><strong>" : "><a href=".makeUrl($name).">");
-                        echo $title;
-                        echo ($statCat == $name ? "</strong>" : "</a>")."</th>\n";
+                        echo "<th".($statCat == $name ? " id=\"sorted\"><strong>" : "><a href=".makeUrl($name).">")
+                             .$title.($statCat == $name ? "</strong>" : "</a>")."</th>\n";
                     };
                     $addCategory("misc", "Divers");
                     $addCategory("distance", "Déplacements");
@@ -88,12 +93,12 @@
                     foreach($uuid as $name => $id)
                     {
                         $json = file_get_contents("server/world/stats/$id.json");
-                        $stat = json_decode($json);
+                        $stats = json_decode($json);
                         
                         foreach(array_keys($statList) as $key)
                         {
-                            if(property_exists($stat, "stat.".$key))
-                                $players[$name][$key] = $stat->{"stat.".$key};
+                            if(property_exists($stats, "stat.".$key))
+                                $players[$name][$key] = $stats->{"stat.".$key};
                             else
                                 $players[$name][$key] = -1;
                         }
@@ -112,22 +117,22 @@
                         $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
                     
                     if(isset($_GET["sort"]))
-                        $sortBy = $_GET["sort"];
+                        $sortStat = $_GET["sort"];
                     else if(isset($defaultKey))
-                        $sortBy = $defaultKey;
+                        $sortStat = $defaultKey;
                     else
-                        $sortBy = "total";
+                        $sortStat = "total";
                         
-                    if(!in_array($sortBy, array_keys($statList)))
+                    if(!in_array($sortStat, array_keys($statList)))
                     {
-                        echo "Erreur : tri impossible, élément introuvable \"$sortBy\"";
+                        echo "Erreur : tri impossible, statistique introuvable \"$sortStat\"";
                         exit;
                     }
                     
                     uasort($players, function($a, $b)
                     {
-                        global $sortBy;
-                        return $b[$sortBy] - $a[$sortBy];
+                        global $sortStat;
+                        return $b[$sortStat] - $a[$sortStat];
                     });
                     
                     // SORT BY PLAYER
@@ -147,12 +152,11 @@
                             echo "Erreur : tri impossible, joueur introuvable \"$sortPlayer\"";
                             exit;
                         }
-                        $oldList = $statList;
                         
-                        uasort($statList, function($a, $b)
+                        uksort($statList, function($a, $b)
                         {
-                            global $players, $oldList, $sortPlayer;
-                            return $players[$sortPlayer][array_search($b, $oldList)] - $players[$sortPlayer][array_search($a, $oldList)];
+                            global $players, $sortPlayer;
+                            return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
                         });
                     }
                     
@@ -165,9 +169,11 @@
                     foreach(array_keys($players) as $name)
                     {
                         $sorted = $name == $sortPlayer;
-                        echo "<th ".($sorted ? " class=\"sorted\"><strong>" : ">")."$rank. ";
-                        echo $sorted || isset($defaultKey) ? "" : "<a href=".makeUrl($statCat, $sortBy, $name).">";
-                        echo "$name <img src=\"https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay\">".($sorted ? "</strong>" : "</a>")."</td>";
+                        echo "<th ".($sorted ? " class=\"sorted\"><strong>" : ">")
+                             ."$rank. "
+                             .($sorted || isset($defaultKey) ? "" : "<a href=".makeUrl($statCat, $sortStat, $name).">")
+                             ."$name <img src=\"https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay\">"
+                             .($sorted || isset($defaultKey) ? "</strong>" : "</a>")."</td>";
                         $rank++;
                     }
                     echo "</tr>\n";
@@ -176,16 +182,20 @@
                     {
                         echo "<tr>";
                         
-                        $sorted = $key == $sortBy;
-                        echo "<th".($sorted ? " class=\"sorted\"><strong>" : "><a href=".makeUrl($statCat, $key, $sortPlayer).">").$values[0].($sorted ? "</strong>" : "</a>")."</td>";
+                        $sorted = $key == $sortStat;
+                        echo "<th".($sorted ?
+                             " class=\"sorted\"><strong>" :
+                             "><a href=".makeUrl($statCat, $key, $sortPlayer).">")
+                             .$values[0].($sorted ? "</strong>" : "</a>")."</td>";
                         
-                        foreach($players as $playerKey => $player)
+                        foreach($players as $name => $player)
                         {
-                            $sorted = $playerKey == $sortPlayer || $key == $sortBy;
-                            if($player[$key] == -1)
-                                echo "<td".($sorted ? " id=\"sorted\">" : ">")."—</td>";
+                            $sorted = $name == $sortPlayer || $key == $sortStat;
+                            if($player[$key] > 0)
+                                echo "<td".($sorted ? " id=\"sorted\">" : ">")
+                                     .formatValue($player[$key], $statList[$key][1])."</td>";
                             else
-                                echo "<td".($sorted ? " id=\"sorted\">" : ">")."".formatValue($player[$key], $statList[$key][1])."</td>";
+                                echo "<td".($sorted ? " id=\"sorted\">" : ">")."—</td>";
                         }
                         
                         echo "</tr>\n";
@@ -194,7 +204,9 @@
                     echo "</table>";
                 ?>
             </section>
-            <div id="attribution">Thank you to <a target="_blank" href="https://crafatar.com">Crafatar</a> for providing avatars.</div>
+            <div id="attribution">
+                Retrouver le <a target="_blank" href="https://github.com/Olybri/Minecrew">projet sur GitHub</a> | 
+                Fournisseur d'avatars : <a target="_blank" href="https://crafatar.com">Crafatar</a></div>
         </div>
         <br>
     </body>

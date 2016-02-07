@@ -50,7 +50,8 @@
                             socket_send($socket, "\xFE", 1, 0);
                             $length = socket_recv($socket, $data, 512, 0);
                             $pieces = explode("\x00\xA7", substr($data, 1));
-                            echo "Nom : <strong>".$pieces[0]."</strong><br>Joueurs connectés : <strong>".$pieces[1]."</strong> / <strong>".$pieces[2]."</strong><br>";
+                            echo "Nom : <strong>".$pieces[0]."</strong><br>Joueurs connectés : <strong>"
+                                 .$pieces[1]."</strong> / <strong>".$pieces[2]."</strong><br>";
                         }
                         socket_close($socket);
                     }
@@ -69,6 +70,10 @@
                 <h2><a href="players.php">Comparer les joueurs</a></h2>
                 <br>
             </section>
+            <div id="attribution">
+                Retrouver le <a target="_blank" href="https://github.com/Olybri/Minecrew">projet sur GitHub</a> | 
+                Rendu de la carte : <a target="_blank" href="https://overviewer.org/">The Overviewer</a>
+            </div>
         </div>
         <br>
         <div id="mcmap">
