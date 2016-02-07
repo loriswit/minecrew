@@ -17,7 +17,7 @@
         <script type="text/javascript" src="map/overviewerConfig.js"></script>
         <script type="text/javascript" src="map/overviewer.js"></script>
         <script type="text/javascript" src="map/baseMarkers.js"></script>
-    </head>    
+    </head>
     <body onload="overviewer.util.initialize()">
         <div id="pannel">
             <header>
@@ -33,8 +33,8 @@
                         $service_port = 25565;
                         $address = gethostbyname($hostname);
                         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0)); 
-                        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0)); 
+                        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 5, "usec" => 0)); 
+                        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0)); 
                         if(socket_connect($socket, $address, $service_port) === false)
                         {
                             echo "est <span class=\"red\">fermé</span>.</h2><br>";
@@ -51,7 +51,7 @@
                         socket_close($socket);
                     }
                     
-                    test_server('olybri.ddns.net', '');
+                    test_server("olybri.ddns.net", "");
                 ?>
                 <br>
                 <form>

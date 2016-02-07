@@ -854,13 +854,13 @@ overviewer.views.CompassView = Backbone.View.extend({
         var tsetModel = overviewer.mapView.options.currentTileSet;
         var northdir = tsetModel.get("north_direction");
         if (northdir == overviewerConfig.CONST.UPPERLEFT)
-            this.$("IMG").attr("src","compass_upper-left.png");
+            this.$("IMG").attr("src","map/compass_upper-left.png");
         if (northdir == overviewerConfig.CONST.UPPERRIGHT)
-            this.$("IMG").attr("src", "compass_upper-right.png");
+            this.$("IMG").attr("src", "map/compass_upper-right.png");
         if (northdir == overviewerConfig.CONST.LOWERLEFT)
-            this.$("IMG").attr("src", "compass_lower-left.png");
+            this.$("IMG").attr("src", "map/compass_lower-left.png");
         if (northdir == overviewerConfig.CONST.LOWERRIGHT)
-            this.$("IMG").attr("src", "compass_lower-right.png");
+            this.$("IMG").attr("src", "map/compass_lower-right.png");
     }
 });
 
