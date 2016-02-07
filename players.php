@@ -11,7 +11,7 @@
         <div id="pannel_player">
             <header>
                 <h2>Comparaison des joueurs</h2>
-                <a href="index.php">Retour</a>
+                <a href="/">Retour</a>
                 <br>
                 <br>
             </header>
