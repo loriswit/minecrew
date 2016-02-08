@@ -48,7 +48,7 @@
                             echo "est <span class=\"green\">ouvert</span>.</h2><br>";
 
                             socket_send($socket, "\xFE", 1, 0);
-                            $length = socket_recv($socket, $data, 512, 0);
+                            socket_recv($socket, $data, 512, 0);
                             $pieces = explode("\x00\xA7", substr($data, 1));
                             echo "Nom : <strong>".$pieces[0]."</strong><br>Joueurs connectés : <strong>"
                                  .$pieces[1]."</strong> / <strong>".$pieces[2]."</strong><br>";

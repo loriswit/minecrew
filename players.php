@@ -21,7 +21,7 @@
                 
                     function makeUrl($stat, $sort = "", $name = "")
                     {
-                        return "\"".$_SERVER["PHP_SELF"]."?stat=$stat"
+                        return "\"".filter_input(INPUT_SERVER, "PHP_SELF")."?stat=$stat"
                                .(empty($sort) ? "" : "&sort=$sort")
                                .(empty($name) ? "" : "&name=$name")."\"";
                     }
@@ -75,14 +75,19 @@
                     $addCategory("misc", "Divers");
                     $addCategory("distance", "Déplacements");
                     $addCategory("interaction", "Interactions");
+                    echo "<td id=\"blank\"></td>\n";
                     $addCategory("craftitem", "Objets fabriqués");
-                    $addCategory("useblock", "Blocs utilisés");
-                    echo "\n</tr><tr>\n";
                     $addCategory("useitem", "Objets utilisés");
                     $addCategory("breakitem", "Objets épuisés");
-                    $addCategory("mineblock", "Blocs minés");
+                    echo "\n</tr><tr>\n";
                     $addCategory("killentity", "Entités tuées");
                     $addCategory("entitykilledby", "Tué par entités");
+                    echo "<td id=\"blank\"></td>\n";
+                    echo "<td id=\"blank\"></td>\n";
+                    $addCategory("craftblock", "Blocs fabriqués");
+                    $addCategory("useblock", "Blocs utilisés");
+                    $addCategory("mineblock", "Blocs minés");
+                    
                     echo "</tr></table><br>\n";
                         
                     include $statFilename;
@@ -164,7 +169,7 @@
                     
                     echo "<table>";
                         
-                    echo "<tr><td id=\"corner\">Statistique :</th>\n";
+                    echo "<tr><td id=\"corner\">Statistique :</td>\n";
                     $rank = 1;
                     foreach(array_keys($players) as $name)
                     {

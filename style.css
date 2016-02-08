@@ -130,6 +130,13 @@ td
     background: none;
 }
 
+#blank
+{
+    width: 10px;
+    border: none;
+    background: none;
+}
+
 th
 {
     padding: 5px;
