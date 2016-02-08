@@ -210,7 +210,7 @@
                 ?>
             </section>
             <div id="attribution">
-                Retrouver le <a target="_blank" href="https://github.com/Olybri/Minecrew">projet sur GitHub</a> | 
+                Accéder au <a target="_blank" href="https://github.com/Olybri/Minecrew">dépôt GitHub</a> | 
                 Fournisseur d'avatars : <a target="_blank" href="https://crafatar.com">Crafatar</a></div>
         </div>
         <br>

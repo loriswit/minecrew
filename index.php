@@ -16,11 +16,11 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
 
-        <script type="text/javascript" src="map/underscore.js"></script>
-        <script type="text/javascript" src="map/backbone.js"></script>
-        <script type="text/javascript" src="map/overviewerConfig.js"></script>
-        <script type="text/javascript" src="map/overviewer.js"></script>
-        <script type="text/javascript" src="map/baseMarkers.js"></script>
+        <script type="text/javascript" src="extern/underscore.js"></script>
+        <script type="text/javascript" src="extern/backbone.js"></script>
+        <script type="text/javascript" src="extern/overviewerConfig.js"></script>
+        <script type="text/javascript" src="extern/overviewer.js"></script>
+        <script type="text/javascript" src="extern/baseMarkers.js"></script>
     </head>
     <body onload="overviewer.util.initialize()">
         <div id="pannel">
@@ -71,7 +71,7 @@
                 <br>
             </section>
             <div id="attribution">
-                Retrouver le <a target="_blank" href="https://github.com/Olybri/Minecrew">projet sur GitHub</a> | 
+                Accéder au <a target="_blank" href="https://github.com/Olybri/Minecrew">dépôt GitHub</a> | 
                 Rendu de la carte : <a target="_blank" href="https://overviewer.org/">The Overviewer</a>
             </div>
         </div>
