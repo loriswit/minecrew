@@ -55,7 +55,7 @@
                     else
                         $statCat = "misc";
                         
-                    $statFilename = "statlist/".$statCat.".php";
+                    $statFilename = "statlist/".$statCat.".inc";
                     
                     if(!file_exists($statFilename))
                     {
@@ -89,8 +89,6 @@
                     $addCategory("mineblock", "Blocs minés");
                     
                     echo "</tr></table><br>\n";
-                        
-                    include $statFilename;
                     
                     // FILL PLAYER STATS
                     
@@ -104,6 +102,8 @@
                         "masterviki",
                         "alexdam99",
                     );
+                    
+                    include $statFilename;
                     
                     $usercache = json_decode(file_get_contents("server/usercache.json"), true);
                     
