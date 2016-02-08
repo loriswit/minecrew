@@ -59,7 +59,7 @@
                     
                     if(!file_exists($statFilename))
                     {
-                        echo "Erreur : catégorie introuvables \"$statCat\"";
+                        echo "Erreur : catégorie introuvable \"$statCat\"";
                         exit;
                     }
                     
@@ -82,8 +82,8 @@
                     echo "\n</tr><tr>\n";
                     $addCategory("killentity", "Entités tuées");
                     $addCategory("entitykilledby", "Tué par entités");
-                    echo "<td id=\"blank\"></td>\n";
-                    echo "<td id=\"blank\"></td>\n";
+                    echo "<td id=\"blank\"></td>\n"
+                         ."<td id=\"blank\"></td>\n";
                     $addCategory("craftblock", "Blocs fabriqués");
                     $addCategory("useblock", "Blocs utilisés");
                     $addCategory("mineblock", "Blocs minés");
@@ -94,10 +94,26 @@
                     
                     // FILL PLAYER STATS
                     
-                    include "uuid.php";
-                    foreach($uuid as $name => $id)
+                    $names = array
+                    (
+                        "Olybri",
+                        "Rastaz",
+                        "Fallox",
+                        "Tobapnw",
+                        "Tamer",
+                        "masterviki",
+                        "alexdam99",
+                    );
+                    
+                    $usercache = json_decode(file_get_contents("server/usercache.json"), true);
+                    
+                    foreach($names as $name)
                     {
-                        $json = file_get_contents("server/world/stats/$id.json");
+                        foreach($usercache as $user)
+                            if($user["name"] == $name)
+                                $uuid = $user["uuid"];
+                        
+                        $json = file_get_contents("server/world/stats/$uuid.json");
                         $stats = json_decode($json);
                         
                         foreach(array_keys($statList) as $key)
