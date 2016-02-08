@@ -59,7 +59,7 @@
                     
                     if(!file_exists($statFilename))
                     {
-                        echo "Erreur : catégorie introuvable \"$statCat\"";
+                        echo "Erreur : catégorie introuvable \"$statCat\" !";
                         exit;
                     }
                     
@@ -69,8 +69,8 @@
                     $addCategory = function($name, $title)
                     {
                         global $statCat;
-                        echo "<th".($statCat == $name ? " id=\"sorted\"><strong>" : "><a href=".makeUrl($name).">")
-                             .$title.($statCat == $name ? "</strong>" : "</a>")."</th>\n";
+                        echo "<th".($statCat == $name ? " id=\"sorted\"><b>" : "><a href=".makeUrl($name).">")
+                             .$title.($statCat == $name ? "</b>" : "</a>")."</th>\n";
                     };
                     $addCategory("misc", "Divers");
                     $addCategory("distance", "Déplacements");
@@ -92,26 +92,14 @@
                     
                     // FILL PLAYER STATS
                     
-                    $names = array
-                    (
-                        "Olybri",
-                        "Rastaz",
-                        "Fallox",
-                        "Tobapnw",
-                        "Tamer",
-                        "masterviki",
-                        "alexdam99",
-                    );
-                    
                     include $statFilename;
                     
                     $usercache = json_decode(file_get_contents("server/usercache.json"), true);
                     
-                    foreach($names as $name)
+                    foreach($usercache as $user)
                     {
-                        foreach($usercache as $user)
-                            if($user["name"] == $name)
-                                $uuid = $user["uuid"];
+                        $name = $user["name"];
+                        $uuid = $user["uuid"];
                         
                         $json = file_get_contents("server/world/stats/$uuid.json");
                         $stats = json_decode($json);
@@ -146,7 +134,7 @@
                         
                     if(!in_array($sortStat, array_keys($statList)))
                     {
-                        echo "Erreur : tri impossible, statistique introuvable \"$sortStat\"";
+                        echo "Erreur : tri impossible, statistique introuvable \"$sortStat\" !";
                         exit;
                     }
                     
@@ -170,7 +158,7 @@
                             
                         if(!in_array($sortPlayer, array_keys($players)))
                         {
-                            echo "Erreur : tri impossible, joueur introuvable \"$sortPlayer\"";
+                            echo "Erreur : tri impossible, joueur introuvable \"$sortPlayer\" !";
                             exit;
                         }
                         
@@ -190,11 +178,11 @@
                     foreach(array_keys($players) as $name)
                     {
                         $sorted = $name == $sortPlayer;
-                        echo "<th ".($sorted ? " class=\"sorted\"><strong>" : ">")
+                        echo "<th ".($sorted ? " class=\"sorted\"><b>" : ">")
                              ."$rank. "
                              .($sorted || isset($defaultKey) ? "" : "<a href=".makeUrl($statCat, $sortStat, $name).">")
                              ."$name <img src=\"https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay\">"
-                             .($sorted || isset($defaultKey) ? "</strong>" : "</a>")."</td>";
+                             .($sorted || isset($defaultKey) ? "</b>" : "</a>")."</td>";
                         $rank++;
                     }
                     echo "</tr>\n";
@@ -205,9 +193,9 @@
                         
                         $sorted = $key == $sortStat;
                         echo "<th".($sorted ?
-                             " class=\"sorted\"><strong>" :
+                             " class=\"sorted\"><b>" :
                              "><a href=".makeUrl($statCat, $key, $sortPlayer).">")
-                             .$values[0].($sorted ? "</strong>" : "</a>")."</td>";
+                             .$values[0].($sorted ? "</b>" : "</a>")."</td>";
                         
                         foreach($players as $name => $player)
                         {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <?php require "config.inc"; ?>
     <head>
         <?php
             if(!isset($_GET["init"]))
@@ -7,7 +8,7 @@
         ?>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />
-        <title>Minecrew Server</title>
+        <title><?php echo TITLE; ?></title>
         <link rel="shortcut icon" href="images/favicon.ico">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         
@@ -25,43 +26,38 @@
     <body onload="overviewer.util.initialize()">
         <div id="pannel">
             <header>
-                <h2>Minecrew</h2>
+                <h2><?php echo TITLE; ?></h2>
             </header>
             <section>
                 <?php
                     error_reporting(E_ERROR | E_PARSE);
                     
-                    function test_server($hostname, $info)
-                    {
-                        echo "<h2>Le serveur ";
-                        $service_port = 25565;
-                        $address = gethostbyname($hostname);
-                        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 5, "usec" => 0)); 
-                        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0)); 
-                        if(socket_connect($socket, $address, $service_port) === false)
-                        {
-                            echo "est <span class=\"red\">fermé</span>.</h2><br>";
-                        }
-                        else
-                        {
-                            echo "est <span class=\"green\">ouvert</span>.</h2><br>";
+                    echo "<h2>Le serveur ";
 
-                            socket_send($socket, "\xFE", 1, 0);
-                            socket_recv($socket, $data, 512, 0);
-                            $pieces = explode("\x00\xA7", substr($data, 1));
-                            echo "Nom : <strong>".$pieces[0]."</strong><br>Joueurs connectés : <strong>"
-                                 .$pieces[1]."</strong> / <strong>".$pieces[2]."</strong><br>";
-                        }
-                        socket_close($socket);
+                    $address = gethostbyname(HOSTNAME);
+                    $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+                    socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 5, "usec" => 0)); 
+                    socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0)); 
+                    if(socket_connect($socket, $address, PORT) === false)
+                    {
+                        echo "est <span class=\"red\">fermé</span>.</h2><br>";
                     }
-                    
-                    test_server("olybri.ddns.net", "");
+                    else
+                    {
+                        echo "est <span class=\"green\">ouvert</span>.</h2><br>";
+
+                        socket_send($socket, "\xFE", 1, 0);
+                        socket_recv($socket, $data, 512, 0);
+                        $pieces = explode("\x00\xA7", substr($data, 1));
+                        echo "Message : <b>$pieces[0]</b><br>"
+                            ."Joueurs connectés : <b>$pieces[1]</b> / <b>$pieces[2]</b><br>";
+                    }
+                    socket_close($socket);
                 ?>
                 <br>
                 <form>
                     Adresse du serveur : 
-                    <input type="text" name="address" value="olybri.ddns.net" readonly><br>
+                    <input type="text" name="address" value=<?php echo HOSTNAME; ?> readonly><br>
                 </form>
                 <br>
                 Logs : <a href="server/logs/latest.log">latest.log</a><br>
