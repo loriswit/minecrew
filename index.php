@@ -66,10 +66,10 @@
                 <h2><a href="players.php">Comparer les joueurs</a></h2>
                 <br>
             </section>
-            <div id="attribution">
-                Accéder au <a target="_blank" href="https://github.com/Olybri/Minecrew">dépôt GitHub</a> | 
-                Rendu de la carte : <a target="_blank" href="https://overviewer.org/">The Overviewer</a>
-            </div>
+            <?php
+                include "footer.inc";
+                printFooter("Rendu de la carte", "The Overviewer", "https://overviewer.org/");
+            ?>
         </div>
         <br>
         <div id="mcmap">

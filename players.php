@@ -213,9 +213,10 @@
                     echo "</table>";
                 ?>
             </section>
-            <div id="attribution">
-                Accéder au <a target="_blank" href="https://github.com/Olybri/Minecrew">dépôt GitHub</a> | 
-                Fournisseur d'avatars : <a target="_blank" href="https://crafatar.com">Crafatar</a></div>
+            <?php
+                include "footer.inc";
+                printFooter("Fournisseur d'avatars", "Crafatar", "https://crafatar.com");
+            ?>
         </div>
         <br>
     </body>
