@@ -60,7 +60,7 @@
                     <input type="text" name="address" value=<?php echo HOSTNAME; ?> readonly><br>
                 </form>
                 <br>
-                Logs : <a href="server/logs/latest.log">latest.log</a><br>
+                Logs : <a href="<?php echo LOCATION; ?>/logs/latest.log">latest.log</a><br>
                 Backups : <a href="https://drive.google.com/folderview?id=0B9TlCoTkawLrUFNwS3NlcG9VWTQ&usp=sharing#list">snapshots</a><br>
                 Launcher : <a href="https://dl.dropboxusercontent.com/u/109130039/Shared/Shiginima%20Launcher%20SE%20v3.000.zip">télécharger</a><br>
                 <h2><a href="players.php">Comparer les joueurs</a></h2>

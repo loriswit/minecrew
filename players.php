@@ -62,7 +62,8 @@
                         echo "Erreur : catégorie introuvable \"$statCat\" !";
                         exit;
                     }
-                    
+                    include $statFilename;
+
                     // PRINT CATEGORIES
                     
                     echo "<table><tr>\n";
@@ -92,16 +93,22 @@
                     
                     // FILL PLAYER STATS
                     
-                    include $statFilename;
+                    require "config.inc";
                     
-                    $usercache = json_decode(file_get_contents("server/usercache.json"), true);
+                    $usercacheFilename = LOCATION."/usercache.json";
+                    if(!file_exists($usercacheFilename))
+                    {
+                        echo "Erreur : usercache introuvable !<br>Veuillez vérifier le fichier <i>config.inc</i>.";
+                        exit;
+                    }
+                    $usercache = json_decode(file_get_contents($usercacheFilename), true);
                     
                     foreach($usercache as $user)
                     {
                         $name = $user["name"];
                         $uuid = $user["uuid"];
                         
-                        $json = file_get_contents("server/world/stats/$uuid.json");
+                        $json = file_get_contents(LOCATION."/world/stats/$uuid.json");
                         $stats = json_decode($json);
                         
                         foreach(array_keys($statList) as $key)

@@ -3,6 +3,9 @@
 // Titre du serveur
 define("TITLE", "Minecrew");
 
+// Le répertoire contenant le serveur Minecraft
+define("LOCATION", "server");
+
 // L'adresse du serveur
 define("HOSTNAME", "exemple.com");
 
