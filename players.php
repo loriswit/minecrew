@@ -28,6 +28,9 @@
                     
                     function formatValue($value, $type)
                     {
+                        if($value <= 0)
+                            return "—";
+
                         switch($type)
                         {
                             case "km":
@@ -47,13 +50,12 @@
                                 return number_format($value, 0, ",", "'")." $type";
                         }
                     }
-                    
+
                     // GET CURRENT CATEGORY
-                    
-                    if(isset($_GET["stat"]))
-                        $statCat = $_GET["stat"];
-                    else
-                        $statCat = "misc";
+
+                    $statCat = isset($_GET["stat"]) ?
+                        $_GET["stat"] :
+                        "misc";
                         
                     $statFilename = "statlist/".$statCat.".inc";
                     
@@ -112,12 +114,9 @@
                         $stats = json_decode($json);
                         
                         foreach(array_keys($statList) as $key)
-                        {
-                            if(property_exists($stats, "stat.".$key))
-                                $players[$name][$key] = $stats->{"stat.".$key};
-                            else
-                                $players[$name][$key] = -1;
-                        }
+                            $players[$name][$key] = property_exists($stats, "stat.".$key) ?
+                                $stats->{"stat.".$key} :
+                                -1;
                         
                         $total = 0;
                         foreach($players[$name] as $value)
@@ -131,13 +130,10 @@
                     
                     if(!isset($defaultKey))
                         $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
-                    
-                    if(isset($_GET["sort"]))
-                        $sortStat = $_GET["sort"];
-                    else if(isset($defaultKey))
-                        $sortStat = $defaultKey;
-                    else
-                        $sortStat = "total";
+
+                    $sortStat = isset($_GET["sort"]) ?
+                        $_GET["sort"] :
+                        (isset($defaultKey) ? $defaultKey : "total");
                         
                     if(!in_array($sortStat, array_keys($statList)))
                     {
@@ -158,10 +154,10 @@
                         
                     else
                     {
-                        if(isset($_GET["name"]))
-                        $sortPlayer = $_GET["name"];
-                        else
-                            $sortPlayer = array_keys($players)[0];
+
+                        $sortPlayer = isset($_GET["name"]) ?
+                            $_GET["name"] :
+                            array_keys($players)[0];
                             
                         if(!in_array($sortPlayer, array_keys($players)))
                         {
@@ -207,11 +203,8 @@
                         foreach($players as $name => $player)
                         {
                             $sorted = $name == $sortPlayer || $key == $sortStat;
-                            if($player[$key] > 0)
-                                echo "<td".($sorted ? " id=\"sorted\">" : ">")
-                                     .formatValue($player[$key], $statList[$key][1])."</td>";
-                            else
-                                echo "<td".($sorted ? " id=\"sorted\">" : ">")."—</td>";
+                            echo "<td".($sorted ? " id=\"sorted\">" : ">")
+                                 .formatValue($player[$key], $statList[$key][1])."</td>";
                         }
                         
                         echo "</tr>\n";
