@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="/style.css" />
+        <link rel="shortcut icon" href="/images/favicon.ico">
         <title>Erreur <?php echo $_GET["code"] ?></title>
     </head>
     <body>
