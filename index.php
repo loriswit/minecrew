@@ -31,20 +31,21 @@
             <section>
                 <?php
                     error_reporting(E_ERROR | E_PARSE);
-                    
-                    echo "<h2>Le serveur ";
 
                     $address = gethostbyname(HOSTNAME);
+
                     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                     socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 5, "usec" => 0)); 
                     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0)); 
+
+                    echo "<h2>Le serveur est ";
                     if(socket_connect($socket, $address, PORT) === false)
                     {
-                        echo "est <span class=\"red\">fermé</span>.</h2><br>";
+                        echo "<span class=\"red\">fermé</span>.</h2><br>";
                     }
                     else
                     {
-                        echo "est <span class=\"green\">ouvert</span>.</h2><br>";
+                        echo "<span class=\"green\">ouvert</span>.</h2><br>";
 
                         socket_send($socket, "\xFE", 1, 0);
                         socket_recv($socket, $data, 512, 0);
@@ -53,16 +54,22 @@
                             ."Joueurs connectés : <b>$pieces[1]</b> / <b>$pieces[2]</b><br>";
                     }
                     socket_close($socket);
+
+                    echo "<br><form>"
+                            ."Adresse du serveur : "
+                            ."<input type=\"text\" name=\"address\" value=".HOSTNAME." readonly><br>"
+                        ."</form><br>\n";
+
+                    echo "Logs : <a href=\"".LOCATION
+                         .(substr(LOCATION, -1) == "/" ? "" : "/")
+                         ."logs/latest.log\">latest.log</a><br>\n";
+
+                    if(!empty(BACKUP))
+                        echo "Backups : <a href=\"".BACKUP."\">snapshots</a><br>\n";
+
+                    if(!empty(LAUNCHER))
+                        echo "Launcher : <a href=\"".LAUNCHER."\">télécharger</a><br>\n";
                 ?>
-                <br>
-                <form>
-                    Adresse du serveur : 
-                    <input type="text" name="address" value=<?php echo HOSTNAME; ?> readonly><br>
-                </form>
-                <br>
-                Logs : <a href="<?php echo LOCATION; ?>/logs/latest.log">latest.log</a><br>
-                Backups : <a href="https://drive.google.com/folderview?id=0B9TlCoTkawLrUFNwS3NlcG9VWTQ&usp=sharing#list">snapshots</a><br>
-                Launcher : <a href="https://dl.dropboxusercontent.com/u/109130039/Shared/Shiginima%20Launcher%20SE%20v3.000.zip">télécharger</a><br>
                 <h2><a href="players.php">Comparer les joueurs</a></h2>
                 <br>
             </section>
