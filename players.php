@@ -85,8 +85,8 @@
                     echo "\n</tr><tr>\n";
                     $addCategory("killentity", "Entités tuées");
                     $addCategory("entitykilledby", "Tué par entités");
-                    echo "<td id=\"blank\"></td>\n"
-                         ."<td id=\"blank\"></td>\n";
+                    $addCategory("achievement", "Trophées");
+                    echo "<td id=\"blank\"></td>\n";
                     $addCategory("craftblock", "Blocs fabriqués");
                     $addCategory("useblock", "Blocs utilisés");
                     $addCategory("mineblock", "Blocs minés");
@@ -112,10 +112,13 @@
                         
                         $json = file_get_contents(LOCATION."/world/stats/$uuid.json");
                         $stats = json_decode($json);
+
+                        $prefix = isset($prefix) ?
+                            $prefix : "stat";
                         
                         foreach(array_keys($statList) as $key)
-                            $players[$name][$key] = property_exists($stats, "stat.".$key) ?
-                                $stats->{"stat.".$key} :
+                            $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
+                                $stats->{$prefix.".".$key} :
                                 -1;
                         
                         $total = 0;
