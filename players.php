@@ -83,8 +83,8 @@
                     $addCategory("useitem", "Objets utilisés");
                     $addCategory("breakitem", "Objets épuisés");
                     echo "\n</tr><tr>\n";
-                    $addCategory("killentity", "Entités tuées");
-                    $addCategory("entitykilledby", "Tué par entités");
+                    $addCategory("killentity", "Créatures tuées");
+                    $addCategory("entitykilledby", "Tué par créatures");
                     $addCategory("achievement", "Trophées");
                     echo "<td id=\"blank\"></td>\n";
                     $addCategory("craftblock", "Blocs fabriqués");
@@ -119,7 +119,7 @@
                         foreach(array_keys($statList) as $key)
                             $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
                                 $stats->{$prefix.".".$key} :
-                                -1;
+                                0;
                         
                         $total = 0;
                         foreach($players[$name] as $value)
@@ -195,6 +195,9 @@
                     
                     foreach($statList as $key => $values)
                     {
+                        if(!UNUSED_STATS && array_sum(array_column($players, $key)) <= 0)
+                            continue;
+                            
                         echo "<tr>";
                         
                         $sorted = $key == $sortStat;

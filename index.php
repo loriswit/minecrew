@@ -4,7 +4,7 @@
     <head>
         <?php
             if(!isset($_GET["init"]))
-                header('Location: ?init#/-163/64/1345/-1/0/0');
+                header("Location: ?init#/-163/64/1345/-1/0/0");
         ?>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />

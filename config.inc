@@ -18,4 +18,7 @@ define("HOSTNAME", "monserveur.com");
 // Le port du serveur (par défaut : 25565)
 define("PORT", "25565");
 
+// Affiche ou non les statistiques inutilisées (que personne n'a atteintes)
+define("UNUSED_STATS", false);
+
 ?>
