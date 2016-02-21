@@ -135,7 +135,7 @@
                         if(isset($dates))
                         {
                             if(property_exists($dates->{"firstSeen"}, $name) && $statCat != "misc")
-                                $players[$name]["average"] = floor($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
+                                $players[$name]["average"] = round($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
 
                             else
                                 $players[$name]["average"] = 0;
