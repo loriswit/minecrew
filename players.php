@@ -104,6 +104,10 @@
                         exit;
                     }
                     $usercache = json_decode(file_get_contents($usercacheFilename), true);
+
+                    $datesFilename = LOCATION."/dates.json";
+                    if(file_exists($datesFilename))
+                        $dates = json_decode(file_get_contents($datesFilename));
                     
                     foreach($usercache as $user)
                     {
@@ -127,12 +131,24 @@
                                 $total += $value;
                             
                         $players[$name]["total"] = $total;
+
+                        if(isset($dates))
+                        {
+                            if(property_exists($dates->{"firstSeen"}, $name) && $statCat != "misc")
+                                $players[$name]["average"] = floor($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
+
+                            else
+                                $players[$name]["average"] = 0;
+                        }
                     }
                     
                     // SORT BY STAT
                     
                     if(!isset($defaultKey))
                         $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
+
+                    if(isset($dates))
+                        $statList["average"] = array("Moyenne par jour", $statList[array_keys($statList)[0]][1]);
 
                     $sortStat = isset($_GET["sort"]) ?
                         $_GET["sort"] :
@@ -170,6 +186,15 @@
                         
                         uksort($statList, function($a, $b)
                         {
+                            if($b == "total")
+                                return 1;
+                            if($a == "total")
+                                return -1;
+                            if($b == "average")
+                                return 1;
+                            if($a == "average")
+                                return -1;
+
                             global $players, $sortPlayer;
                             return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
                         });
@@ -180,6 +205,7 @@
                     echo "<table>";
                         
                     echo "<tr><td id=\"corner\">Statistique :</td>\n";
+
                     $rank = 1;
                     foreach(array_keys($players) as $name)
                     {
@@ -188,14 +214,15 @@
                              ."$rank. "
                              .($sorted || isset($defaultKey) ? "" : "<a href=".makeUrl($statCat, $sortStat, $name).">")
                              ."$name <img src=\"https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay\">"
-                             .($sorted || isset($defaultKey) ? "</b>" : "</a>")."</td>";
+                             .($sorted || isset($defaultKey) ? "</b>" : "</a>")
+                             ."</td>";
                         $rank++;
                     }
                     echo "</tr>\n";
                     
                     foreach($statList as $key => $values)
                     {
-                        if(!UNUSED_STATS && array_sum(array_column($players, $key)) <= 0)
+                        if(!UNUSED_STATS && $key != "average" && array_sum(array_column($players, $key)) <= 0)
                             continue;
                             
                         echo "<tr>";
@@ -214,6 +241,9 @@
                         }
                         
                         echo "</tr>\n";
+
+                        if($key == "average")
+                            echo "<tr><td id=\"blank\"></td></tr>\n";
                     }
                     
                     echo "</table>";
