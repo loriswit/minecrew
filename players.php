@@ -132,9 +132,9 @@
                             
                         $players[$name]["total"] = $total;
 
-                        if(isset($dates))
+                        if(isset($dates) && $statCat != "misc")
                         {
-                            if(property_exists($dates->{"firstSeen"}, $name) && $statCat != "misc")
+                            if(property_exists($dates->{"firstSeen"}, $name))
                                 $players[$name]["average"] = round($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
 
                             else
@@ -147,7 +147,7 @@
                     if(!isset($defaultKey))
                         $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
 
-                    if(isset($dates))
+                    if(isset($dates) && $statCat != "misc")
                         $statList["average"] = array("Moyenne par jour", $statList[array_keys($statList)[0]][1]);
 
                     $sortStat = isset($_GET["sort"]) ?
