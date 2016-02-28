@@ -132,23 +132,33 @@
                             
                         $players[$name]["total"] = $total;
 
-                        if(isset($dates) && $statCat != "misc")
+                        if($statCat != "misc")
                         {
-                            if(property_exists($dates->{"firstSeen"}, $name))
-                                $players[$name]["average"] = round($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
+                            if(isset($dates))
+                            {
+                                if(property_exists($dates->{"firstSeen"}, $name))
+                                    $players[$name]["average"] = round($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
 
-                            else
-                                $players[$name]["average"] = 0;
+                                else
+                                    $players[$name]["average"] = 0;
+                            }
+
+                            $players[$name]["everyHour"] = round($total / ($stats->{"stat.playOneMinute"} / 72000));
                         }
                     }
-                    
-                    // SORT BY STAT
-                    
+
                     if(!isset($defaultKey))
                         $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
 
-                    if(isset($dates) && $statCat != "misc")
-                        $statList["average"] = array("Moyenne par jour", $statList[array_keys($statList)[0]][1]);
+                    if($statCat != "misc")
+                    {
+                        if(isset($dates))
+                            $statList["average"] = array("Moyenne par jour", $statList[array_keys($statList)[0]][1]);
+
+                        $statList["everyHour"] = array("Chaque heure de jeu", $statList[array_keys($statList)[0]][1]);
+                    }
+
+                    // SORT BY STAT
 
                     $sortStat = isset($_GET["sort"]) ?
                         $_GET["sort"] :
@@ -194,6 +204,10 @@
                                 return 1;
                             if($a == "average")
                                 return -1;
+                            if($b == "everyHour")
+                                return 1;
+                            if($a == "everyHour")
+                                return -1;
 
                             global $players, $sortPlayer;
                             return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
@@ -222,7 +236,7 @@
                     
                     foreach($statList as $key => $values)
                     {
-                        if(!UNUSED_STATS && $key != "average" && array_sum(array_column($players, $key)) <= 0)
+                        if(!UNUSED_STATS && !in_array($key , array("average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
                             continue;
                             
                         echo "<tr>";
@@ -242,7 +256,7 @@
                         
                         echo "</tr>\n";
 
-                        if($key == "average")
+                        if($key == "everyHour")
                             echo "<tr><td id=\"blank\"></td></tr>\n";
                     }
                     
