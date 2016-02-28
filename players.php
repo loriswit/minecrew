@@ -40,7 +40,7 @@
                                     
                             case "h":
                                 return ($value > 72000 ? 
-                                    number_format($value / 72000, 0, ",", "'")." $type " : "")
+                                    number_format(floor($value / 72000), 0, ",", "'")." $type " : "")
                                     .number_format(($value / 1200) % 60, 0, ",", "'")." min";
                                     
                             case "♥":
@@ -137,13 +137,13 @@
                             if(isset($dates))
                             {
                                 if(property_exists($dates->{"firstSeen"}, $name))
-                                    $players[$name]["average"] = round($total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400));
+                                    $players[$name]["average"] = $total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400);
 
                                 else
                                     $players[$name]["average"] = 0;
                             }
 
-                            $players[$name]["everyHour"] = round($total / ($stats->{"stat.playOneMinute"} / 72000));
+                            $players[$name]["everyHour"] = $total / ($stats->{"stat.playOneMinute"} / 72000);
                         }
                     }
 
