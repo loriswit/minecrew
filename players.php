@@ -95,9 +95,9 @@
                     
                     // FILL PLAYER STATS
                     
-                    require "config.inc";
+                    $config = require "config.inc";
                     
-                    $usercacheFilename = LOCATION."/usercache.json";
+                    $usercacheFilename = $config["LOCATION"]."/usercache.json";
                     if(!file_exists($usercacheFilename))
                     {
                         echo "Erreur : usercache introuvable !<br>Veuillez vérifier le fichier <i>config.inc</i>.";
@@ -105,16 +105,19 @@
                     }
                     $usercache = json_decode(file_get_contents($usercacheFilename), true);
 
-                    $datesFilename = LOCATION."/dates.json";
+                    $datesFilename = $config["LOCATION"]."/dates.json";
                     if(file_exists($datesFilename))
                         $dates = json_decode(file_get_contents($datesFilename));
                     
                     foreach($usercache as $user)
                     {
+                        if(in_array($user["name"], $config["HIDDEN_PLAYERS"]))
+                            continue;
+
                         $name = $user["name"];
                         $uuid = $user["uuid"];
                         
-                        $json = file_get_contents(LOCATION."/world/stats/$uuid.json");
+                        $json = file_get_contents($config["LOCATION"]."/world/stats/$uuid.json");
                         $stats = json_decode($json);
 
                         $prefix = isset($prefix) ?
@@ -236,7 +239,7 @@
                     
                     foreach($statList as $key => $values)
                     {
-                        if(!UNUSED_STATS && !in_array($key , array("average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
+                        if(!$config["UNUSED_STATS"] && !in_array($key , array("average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
                             continue;
                             
                         echo "<tr>";

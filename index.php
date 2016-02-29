@@ -1,6 +1,6 @@
 <!DOCTYPE html>
+<?php $config = require "config.inc"; ?>
 <html>
-    <?php require "config.inc"; ?>
     <head>
         <?php
             if(!isset($_GET["init"]))
@@ -8,7 +8,7 @@
         ?>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />
-        <title><?php echo TITLE; ?></title>
+        <title><?php echo $config["TITLE"]; ?></title>
         <link rel="shortcut icon" href="images/favicon.ico">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         
@@ -26,7 +26,7 @@
     <body onload="overviewer.util.initialize()">
         <div id="pannel">
             <header>
-                <h2><?php echo TITLE; ?></h2>
+                <h2><?php echo $config["TITLE"]; ?></h2>
             </header>
             <section>
                 <?php
@@ -37,7 +37,7 @@
                     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0));
 
                     echo "<h2>Le serveur est ";
-                    if(socket_connect($socket, HOSTNAME, PORT) === false)
+                    if(socket_connect($socket, $config["HOSTNAME"], $config["PORT"]) === false)
                     {
                         echo "<span class=\"red\">fermé</span>.</h2><br>";
                     }
@@ -45,7 +45,7 @@
                     {
                         echo "<span class=\"green\">ouvert</span>.</h2><br>";
 
-                        $handshake = pack("ccca*nccc", 0, 47, strlen(HOSTNAME), HOSTNAME, PORT, 1, 1, 0);
+                        $handshake = pack("ccca*nccc", 0, 47, strlen($config["HOSTNAME"]), $config["HOSTNAME"], $config["PORT"], 1, 1, 0);
                         $handshake = chr(strlen($handshake) - 2).$handshake;
 
                         socket_write($socket, $handshake);
@@ -79,18 +79,18 @@
 
                     echo "<br><form>"
                             ."Adresse du serveur : "
-                            ."<input type=\"text\" name=\"address\" value=".HOSTNAME." readonly><br>"
+                            ."<input type=\"text\" name=\"address\" value=".$config["HOSTNAME"]." readonly><br>"
                         ."</form><br>\n";
 
-                    echo "Logs : <a href=\"".LOCATION
-                         .(substr(LOCATION, -1) == "/" ? "" : "/")
+                    echo "Logs : <a href=\"".$config["LOCATION"]
+                         .(substr($config["LOCATION"], -1) == "/" ? "" : "/")
                          ."logs/latest.log\">latest.log</a><br>\n";
 
-                    if(!empty(BACKUP))
-                        echo "Backups : <a href=\"".BACKUP."\">snapshots</a><br>\n";
+                    if(!empty($config["BACKUP"]))
+                        echo "Backups : <a href=\"".$config["BACKUP"]."\">snapshots</a><br>\n";
 
-                    if(!empty(LAUNCHER))
-                        echo "Launcher : <a href=\"".LAUNCHER."\">télécharger</a><br>\n";
+                    if(!empty($config["LAUNCHER"]))
+                        echo "Launcher : <a href=\"".$config["LAUNCHER"]."\">télécharger</a><br>\n";
                 ?>
                 <h2><a href="players.php">Comparer les joueurs</a></h2>
                 <br>
