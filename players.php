@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php $config = require "config.inc"; ?>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -69,9 +70,8 @@
                     // PRINT CATEGORIES
                     
                     echo "<table><tr>\n";
-                    $addCategory = function($name, $title)
+                    $addCategory = function($name, $title) use($statCat)
                     {
-                        global $statCat;
                         echo "<th".($statCat == $name ? " id=\"sorted\"><b>" : "><a href=".makeUrl($name).">")
                              .$title.($statCat == $name ? "</b>" : "</a>")."</th>\n";
                     };
@@ -95,8 +95,6 @@
                     
                     // FILL PLAYER STATS
                     
-                    $config = require "config.inc";
-                    
                     $usercacheFilename = $config["LOCATION"]."/usercache.json";
                     if(!file_exists($usercacheFilename))
                     {
@@ -108,6 +106,11 @@
                     $datesFilename = $config["LOCATION"]."/dates.json";
                     if(file_exists($datesFilename))
                         $dates = json_decode(file_get_contents($datesFilename));
+
+                    $daysSinceFirstSeen = function($playerName) use($dates)
+                    {
+                        return (time() - $dates->{"firstSeen"}->{$playerName}) / 86400;
+                    };
                     
                     foreach($usercache as $user)
                     {
@@ -124,9 +127,15 @@
                             $prefix : "stat";
                         
                         foreach(array_keys($statList) as $key)
-                            $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
-                                $stats->{$prefix.".".$key} :
-                                0;
+                        {
+                            if($key != "average")
+                                $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
+                                    $stats->{$prefix.".".$key} :
+                                    0;
+
+                            else
+                                $players[$name]["average"] = $stats->{$prefix.".playOneMinute"} / $daysSinceFirstSeen($name);
+                        }
                         
                         $total = 0;
                         foreach($players[$name] as $value)
@@ -140,7 +149,7 @@
                             if(isset($dates))
                             {
                                 if(property_exists($dates->{"firstSeen"}, $name))
-                                    $players[$name]["average"] = $total / ((time() - $dates->{"firstSeen"}->{$name}) / 86400);
+                                    $players[$name]["average"] = $total / $daysSinceFirstSeen($name);
 
                                 else
                                     $players[$name]["average"] = 0;
@@ -160,6 +169,8 @@
 
                         $statList["everyHour"] = array("Chaque heure de jeu", $statList[array_keys($statList)[0]][1]);
                     }
+                    else
+                        $statList["average"] = array("Temps de jeu par jour", "h");
 
                     // SORT BY STAT
 
@@ -173,9 +184,8 @@
                         exit;
                     }
                     
-                    uasort($players, function($a, $b)
+                    uasort($players, function($a, $b) use($sortStat)
                     {
-                        global $sortStat;
                         return $b[$sortStat] - $a[$sortStat];
                     });
                     
@@ -197,7 +207,7 @@
                             exit;
                         }
                         
-                        uksort($statList, function($a, $b)
+                        uksort($statList, function($a, $b) use($players, $sortPlayer)
                         {
                             if($b == "total")
                                 return 1;
@@ -212,7 +222,6 @@
                             if($a == "everyHour")
                                 return -1;
 
-                            global $players, $sortPlayer;
                             return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
                         });
                     }

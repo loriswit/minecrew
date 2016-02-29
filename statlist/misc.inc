@@ -6,6 +6,7 @@ $statList = array
 (
     "leaveGame" => array("Sessions de jeu", ""),
     "playOneMinute" => array("Temps de jeu", "h"),
+    "average" => array("Temps de jeu par jour", "h"),
     "timeSinceDeath" => array("Temps survécu", "h"),
     "sneakTime" => array("Temps accroupi", "h"),
     "jump" => array("Sauts", ""),
