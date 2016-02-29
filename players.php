@@ -236,11 +236,16 @@
                         $rank++;
                     }
                     echo "</tr>\n";
+
+                    $unlisted = "<b>Non-listés :</b> ";
                     
                     foreach($statList as $key => $values)
                     {
                         if(!$config["UNUSED_STATS"] && !in_array($key , array("average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
+                        {
+                            $unlisted .= $values[0]." | ";
                             continue;
+                        }
                             
                         echo "<tr>";
                         
@@ -263,7 +268,8 @@
                             echo "<tr><td id=\"blank\"></td></tr>\n";
                     }
                     
-                    echo "</table>";
+                    echo "</table><br>".substr($unlisted, 0, -3);
+
                 ?>
             </section>
             <?php
