@@ -1,21 +1,21 @@
 # Minecrew
 ## Site web pour serveurs Minecraft
 
-Ce site web met en page plusieurs informtions sur le serveur Minecraft asocié. Ce dernier doit se trouver par défaut dans un dossier *server*. Ce service est compatible avec [Minecraft 1.8.9](http://minecraft.gamepedia.com/1.8.9).
+Ce site web met en page plusieurs informtions sur le serveur Minecraft asocié. Ce service est compatible avec [Minecraft 1.9](http://minecraft.gamepedia.com/1.9).
 
 ### Fonctionnalités
 
 * Affiche le status du serveur
   * Ouvert / fermé
   * Message du jour
-  * Nombre de joueurs en ligne
+  * Joueurs en ligne
 
 * Fournit des liens utiles
   * Dernier logs
   * Sauvegardes
   * Launcher personnlisé
 
-* Affiche une carte du monde (rendu avec [The Overviewer](https://overviewer.org/), par défaut dans un dossier *render*)
+* Affiche un rendu de la carte du monde.
 
 * Compare les joueurs selons plusieurs catégories de statistiques (triable par statistique et par nom de joueur)
   * Déplacements

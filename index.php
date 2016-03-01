@@ -45,7 +45,7 @@
                     {
                         echo "<span class=\"green\">ouvert</span>.</h2><br>";
 
-                        $handshake = pack("ccca*nccc", 0, 47, strlen($config["HOSTNAME"]), $config["HOSTNAME"], $config["PORT"], 1, 1, 0);
+                        $handshake = pack("ccca*nccc", 0, 107, strlen($config["HOSTNAME"]), $config["HOSTNAME"], $config["PORT"], 1, 1, 0);
                         $handshake = chr(strlen($handshake) - 2).$handshake;
 
                         socket_write($socket, $handshake);
@@ -58,13 +58,14 @@
                         $size += $byte * pow(256, $i);
 
                         socket_recv($socket, $response, $size, 0);
-                        if(substr(response, -2) != "\"}")
+                        if(substr($response, -2) != "\"}")
                             $response .= "\"}";
 
                         $info = json_decode($response);
 
-                        echo "Message : <i>".$info->{"description"}."</i><br>";
+                        echo "Message : <i>".$info->{"description"}->{"text"}."</i><br>";
 
+                        $playerlist = "";
                         if($info->{"players"}->{"online"} > 0)
                         {
                             foreach($info->{"players"}->{"sample"} as $name)
