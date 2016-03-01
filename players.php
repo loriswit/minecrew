@@ -209,21 +209,13 @@
                         
                         uksort($statList, function($a, $b) use($players, $sortPlayer)
                         {
-                            if($b == "total")
-                                return 1;
-                            if($a == "total")
-                                return -1;
-                            if($b == "average")
-                                return 1;
-                            if($a == "average")
-                                return -1;
-                            if($b == "everyHour")
-                                return 1;
-                            if($a == "everyHour")
-                                return -1;
-
                             return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
                         });
+
+                        $statList = array("total" => $statList["total"])
+                                  + array("average" => $statList["average"])
+                                  + array("everyHour" => $statList["everyHour"])
+                                  + $statList;
                     }
                     
                     // PRINT TABLE
