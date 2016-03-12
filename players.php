@@ -101,6 +101,8 @@
                     $addCategory("craftItem_items", "Objets fabriqués");
                     $addCategory("useItem_items", "Objets utilisés");
                     $addCategory("breakItem_items", "Objets épuisés");
+                    $addCategory("pickup_items", "Objets ramassés");
+                    $addCategory("drop_items", "Objets lâchés");
                     echo "\n</tr><tr>\n";
                     $addCategory("killentity", "Créatures tuées");
                     $addCategory("entitykilledby", "Tué par créatures");
@@ -109,6 +111,8 @@
                     $addCategory("craftItem_blocks", "Blocs fabriqués");
                     $addCategory("useItem_blocks", "Blocs utilisés");
                     $addCategory("mineBlock_blocks", "Blocs minés");
+                    $addCategory("pickup_blocks", "Blocs ramassés");
+                    $addCategory("drop_blocks", "Blocs lâchés");
                     
                     echo "</tr></table><br>\n";
                     
