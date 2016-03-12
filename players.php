@@ -62,9 +62,28 @@
                     
                     if(!file_exists($statFilename))
                     {
-                        echo "Erreur : catégorie introuvable \"$statCat\" !";
-                        exit;
+                        $pieces = explode("_", $statCat);
+                        if(count($pieces) > 1)
+                        {
+                            $statFilename = "statlist/".$pieces[1].".inc";
+                            if(!file_exists($statFilename))
+                            {
+                                echo "Erreur : type invalide \"".$pieces[1]."\" !";
+                                exit;
+                            }
+                            $prefix = "stat.".$pieces[0];
+                            $showUnlisted = false;
+                        }
+
+                        else
+                        {
+                            echo "Erreur : catégorie introuvable \"$statCat\" !";
+                            exit;
+                        }
                     }
+                    else
+                        $showUnlisted = true;
+
                     include $statFilename;
 
                     // PRINT CATEGORIES
@@ -79,17 +98,17 @@
                     $addCategory("distance", "Déplacements");
                     $addCategory("interaction", "Interactions");
                     echo "<td id=\"blank\"></td>\n";
-                    $addCategory("craftitem", "Objets fabriqués");
-                    $addCategory("useitem", "Objets utilisés");
-                    $addCategory("breakitem", "Objets épuisés");
+                    $addCategory("craftItem_items", "Objets fabriqués");
+                    $addCategory("useItem_items", "Objets utilisés");
+                    $addCategory("breakItem_items", "Objets épuisés");
                     echo "\n</tr><tr>\n";
                     $addCategory("killentity", "Créatures tuées");
                     $addCategory("entitykilledby", "Tué par créatures");
                     $addCategory("achievement", "Trophées");
                     echo "<td id=\"blank\"></td>\n";
-                    $addCategory("craftblock", "Blocs fabriqués");
-                    $addCategory("useblock", "Blocs utilisés");
-                    $addCategory("mineblock", "Blocs minés");
+                    $addCategory("craftItem_blocks", "Blocs fabriqués");
+                    $addCategory("useItem_blocks", "Blocs utilisés");
+                    $addCategory("mineBlock_blocks", "Blocs minés");
                     
                     echo "</tr></table><br>\n";
                     
@@ -240,7 +259,7 @@
                     
                     foreach($statList as $key => $values)
                     {
-                        if(!$config["UNUSED_STATS"] && !in_array($key , array("average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
+                        if(!$config["UNUSED_STATS"] && !in_array($key , array("total", "average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
                         {
                             if(!isset($unlisted))
                                 $unlisted = "<b>Non-listés :</b> ";
@@ -269,8 +288,11 @@
                         if($key == "everyHour")
                             echo "<tr><td id=\"blank\"></td></tr>\n";
                     }
+
+                    echo "</table>";
                     
-                    echo "</table>".(isset($unlisted) ? "<br>".substr($unlisted, 0, -3) : "");
+                    if($showUnlisted)
+                        echo isset($unlisted) ? "<br>".substr($unlisted, 0, -3) : "";
 
                 ?>
             </section>
