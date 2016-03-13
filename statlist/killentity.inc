@@ -20,6 +20,7 @@ $statList = array
     "killEntity.PigZombie" => array("Cochon zombie", ""),
     "killEntity.Rabbit" => array("Lapin", ""),
     "killEntity.Sheep" => array("Mouton", ""),
+    "killEntity.Shulker" => array("Shulker", ""),
     "killEntity.Silverfish" => array("Poisson d'argent", ""),
     "killEntity.Skeleton" => array("Squelette", ""),
     "killEntity.Slime" => array("Slime", ""),
