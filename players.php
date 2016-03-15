@@ -159,6 +159,9 @@
                                 $players[$name][$key] = in_array($key, $stats->{$prefix}->{"progress"}) ?
                                     1 : 0;
 
+                            else if($key == "exploreAllBiomes")
+                                 $players[$name][$key] = $stats->{$prefix.".".$key}->{"value"};
+
                             else if($key != "average")
                                 $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
                                     $stats->{$prefix.".".$key} :

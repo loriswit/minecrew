@@ -19,6 +19,7 @@ $statList = array
     "diamonds" => array("DES DIAMANTS !", ""),
     "diamondsToYou" => array("Des diamants pour vous !", ""),
     "enchantments" => array("Enchanté", ""),
+    "exploreAllBiomes" => array("Partons à l’aventure !", ""),
     "flyPig" => array("Aéro-porc", ""),
     "fullBeacon" => array("Phare à on", ""),
     "ghast" => array("Retour à l'envoyeur", ""),
