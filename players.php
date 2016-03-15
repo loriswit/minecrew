@@ -46,6 +46,9 @@
                                     
                             case "♥":
                                 return number_format($value / 2, $value % 2 ? 1 : 0, ",", "'")." $type";
+
+                            case "bool":
+                                return "Visité";
                                 
                             default:
                                 return number_format($value, 0, ",", "'")." $type";
@@ -91,12 +94,13 @@
                     echo "<table><tr>\n";
                     $addCategory = function($name, $title) use($statCat)
                     {
-                        echo "<th".($statCat == $name ? " id=\"sorted\"><b>" : "><a href=".makeUrl($name).">")
+                        echo "<th".($name == "misc" ? " rowspan=\"2\"" : "").($statCat == $name ? " id=\"sorted\"><b>" : "><a href=".makeUrl($name).">")
                              .$title.($statCat == $name ? "</b>" : "</a>")."</th>\n";
                     };
                     $addCategory("misc", "Divers");
                     $addCategory("distance", "Déplacements");
-                    $addCategory("interaction", "Interactions");
+                    $addCategory("biomes", "Biomes");
+                    $addCategory("killentity", "Créatures tuées");
                     echo "<td id=\"blank\"></td>\n";
                     $addCategory("craftItem_items", "Objets fabriqués");
                     $addCategory("useItem_items", "Objets utilisés");
@@ -104,9 +108,9 @@
                     $addCategory("pickup_items", "Objets ramassés");
                     $addCategory("drop_items", "Objets lâchés");
                     echo "\n</tr><tr>\n";
-                    $addCategory("killentity", "Créatures tuées");
-                    $addCategory("entitykilledby", "Tué par créatures");
+                    $addCategory("interaction", "Interactions");
                     $addCategory("achievement", "Trophées");
+                    $addCategory("entitykilledby", "Tué par créatures");
                     echo "<td id=\"blank\"></td>\n";
                     $addCategory("craftItem_blocks", "Blocs fabriqués");
                     $addCategory("useItem_blocks", "Blocs utilisés");
@@ -151,7 +155,11 @@
                         
                         foreach(array_keys($statList) as $key)
                         {
-                            if($key != "average")
+                            if($statCat == "biomes")
+                                $players[$name][$key] = in_array($key, $stats->{$prefix}->{"progress"}) ?
+                                    1 : 0;
+
+                            else if($key != "average")
                                 $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
                                     $stats->{$prefix.".".$key} :
                                     0;
@@ -183,7 +191,9 @@
                     }
 
                     if(!isset($defaultKey))
-                        $statList["total"] = array("Total", $statList[array_keys($statList)[0]][1]);
+                        $statList["total"] = array("Total", $statCat == "biomes" ?
+                            "" :
+                            $statList[array_keys($statList)[0]][1]);
 
                     if($statCat != "misc")
                     {
@@ -240,6 +250,12 @@
                                   + array("everyHour" => $statList["everyHour"])
                                   + $statList;
                     }
+
+                    if($statCat  == "biomes")
+                    {
+                        unset($statList["average"]);
+                        unset($statList["everyHour"]);
+                    }
                     
                     // PRINT TABLE
                     
@@ -289,7 +305,7 @@
                         
                         echo "</tr>\n";
 
-                        if($key == "everyHour")
+                        if($key == "everyHour" || ($statCat == "biomes" && $key == "total"))
                             echo "<tr><td id=\"blank\"></td></tr>\n";
                     }
 
