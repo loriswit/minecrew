@@ -16,7 +16,6 @@ $statList = array
     "mobKills" => array("Créatures tués", ""),
     "playerKills" => array("Joueurs tués", ""),
     "drop" => array("Objets lâchés", ""),
-    "sleepInBed" => array("Nuits de sommeil", ""),
 );
 
 ?>

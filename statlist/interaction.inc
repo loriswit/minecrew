@@ -28,6 +28,7 @@ $statList = array
     "noteblockTuned" => array("Blocs musicaux accordés", ""),
     "flowerPotted" => array("Fleurs plantées dans pots", ""),
     "recordPlayed" => array("Disques jouées", ""),
+    "sleepInBed" => array("Nuits de sommeil", ""),
 );
 
 ?>
