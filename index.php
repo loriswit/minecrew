@@ -23,61 +23,30 @@
         <script type="text/javascript" src="extern/overviewer.js"></script>
         <script type="text/javascript" src="extern/baseMarkers.js"></script>
     </head>
-    <body onload="overviewer.util.initialize()">
+    <body onload="init()">
         <div id="pannel">
             <header>
                 <h2><?php echo $config["TITLE"]; ?></h2>
             </header>
             <section>
-                <?php
-                    error_reporting(E_ERROR | E_PARSE);
-
-                    $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                    socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec" => 5, "usec" => 0));
-                    socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 5, "usec" => 0));
-
-                    echo "<h2>Le serveur est ";
-                    if(socket_connect($socket, $config["HOSTNAME"], $config["PORT"]) === false)
+                <div id='status'>
+                    <h2>Le serveur est <span class="red"><img src="images/loader.gif"> </span></h2><br>
+                </div>
+                <script>
+                    function init()
                     {
-                        echo "<span class=\"red\">fermé</span>.</h2><br>";
-                    }
-                    else
-                    {
-                        echo "<span class=\"green\">ouvert</span>.</h2><br>";
-
-                        $handshake = pack("ccca*nccc", 0, 107, strlen($config["HOSTNAME"]), $config["HOSTNAME"], $config["PORT"], 1, 1, 0);
-                        $handshake = chr(strlen($handshake) - 2).$handshake;
-
-                        socket_write($socket, $handshake);
-
-                        while(ord(socket_read($socket, 1)) != 0);
-
-                        for($i = 0, $size = 0; ($byte = ord(socket_read($socket, 1))) >= 128; $i++)
-                            $size = ($byte - 128) * pow(256, $i);
-
-                        $size += $byte * pow(256, $i);
-
-                        socket_recv($socket, $response, $size, 0);
-                        if(substr($response, -2) != "\"}")
-                            $response .= "\"}";
-
-                        $info = json_decode($response);
-
-                        echo "Message : <i>".$info->{"description"}->{"text"}."</i><br>";
-
-                        $playerlist = "";
-                        if($info->{"players"}->{"online"} > 0)
+                        overviewer.util.initialize();
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function()
                         {
-                            foreach($info->{"players"}->{"sample"} as $name)
-                                $playerlist .= "<b>".$name->{"name"}."</b> <img src=\"https://crafatar.com/avatars/".$name->{"name"}."?size=16&default=MHF_Steve&overlay\"> | ";
-
-                            echo "<b>".$info->{"players"}->{"online"}."</b> joueurs connectés :<br>".substr($playerlist, 0, -3)."<br>";
-                        }
-                        else
-                            echo "Aucun joueur connecté.<br>";
+                            if (xhttp.readyState == 4 && xhttp.status == 200)
+                                document.getElementById("status").innerHTML = xhttp.responseText;
+                        };
+                        xhttp.open("GET", "connect.php", true);
+                        xhttp.send();
                     }
-                    socket_close($socket);
-
+                </script>
+                <?php
                     echo "<br><form>"
                             ."Adresse du serveur : "
                             ."<input type=\"text\" name=\"address\" value=".$config["HOSTNAME"]." readonly><br>"
