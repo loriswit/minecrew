@@ -2,10 +2,6 @@
 <?php $config = require "config.inc"; ?>
 <html>
     <head>
-        <?php
-            if(!isset($_GET["init"]))
-                header("Location: ?init#/-163/64/1345/-1/0/0");
-        ?>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />
         <title><?php echo $config["TITLE"]; ?></title>
@@ -22,6 +18,28 @@
         <script type="text/javascript" src="extern/overviewerConfig.js"></script>
         <script type="text/javascript" src="extern/overviewer.js"></script>
         <script type="text/javascript" src="extern/baseMarkers.js"></script>
+        <script>
+            function init()
+            {
+                if(!window.location.hash)
+                    window.location.replace("#/-163/64/1345/-1/0/0");
+                
+                overviewer.util.initialize();
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function()
+                {
+                    if (xhttp.readyState == 4 && xhttp.status == 200)
+                        document.getElementById("status").innerHTML = xhttp.responseText;
+                };
+                xhttp.ontimeout = function()
+                {
+                    document.getElementById("substatus").innerHTML = "fermé";
+                };
+                xhttp.open("GET", "connect.php", true);
+                xhttp.timeout = 2000;
+                xhttp.send();
+            }
+        </script>
     </head>
     <body onload="init()">
         <div id="pannel">
@@ -30,22 +48,8 @@
             </header>
             <section>
                 <div id='status'>
-                    <h2>Le serveur est <span class="red"><img src="images/loader.gif"> </span></h2><br>
+                    <h2>Le serveur est <span id='substatus' class="red"><img src="images/loader.gif"> </span></h2><br>
                 </div>
-                <script>
-                    function init()
-                    {
-                        overviewer.util.initialize();
-                        var xhttp = new XMLHttpRequest();
-                        xhttp.onreadystatechange = function()
-                        {
-                            if (xhttp.readyState == 4 && xhttp.status == 200)
-                                document.getElementById("status").innerHTML = xhttp.responseText;
-                        };
-                        xhttp.open("GET", "connect.php", true);
-                        xhttp.send();
-                    }
-                </script>
                 <?php
                     echo "<br><form>"
                             ."Adresse du serveur : "

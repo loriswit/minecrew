@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<?php $config = require "config.inc"; ?>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -7,6 +6,19 @@
         <title>Comparaison des joueurs</title>
         <link rel="shortcut icon" href="images/favicon.ico">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script>
+            function printStats(url)
+            {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function()
+                {
+                    if (xhttp.readyState == 4 && xhttp.status == 200)
+                        document.getElementById("stats").innerHTML = xhttp.responseText;
+                };
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+        </script>
     </head>    
     <body onload="printStats('stats.php')">
         <div id="pannel_player">
@@ -17,21 +29,8 @@
                 <br>
             </header>
             <section id='stats'>
-                loading...
+                Chargement <img src="images/loader.gif">
             </section>
-            <script>
-                function printStats(url)
-                {
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function()
-                    {
-                        if (xhttp.readyState == 4 && xhttp.status == 200)
-                            document.getElementById("stats").innerHTML = xhttp.responseText;
-                    };
-                    xhttp.open("GET", url, true);
-                    xhttp.send();
-                }
-            </script>
             <?php
                 include "footer.inc";
                 printFooter("Fournisseur d'avatars", "Crafatar", "https://crafatar.com");
