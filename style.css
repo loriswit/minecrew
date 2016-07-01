@@ -96,6 +96,20 @@ table
     table-layout: fixed;
 }
 
+.corner
+{
+    width: 300px;
+    border: none;
+    background: none;
+}
+
+.blank
+{
+    width: 10px;
+    border: none;
+    background: none;
+}
+
 td
 {
     padding: 3px;
@@ -103,36 +117,39 @@ td
     background: rgba(255, 255, 220, 0.2);
 }
 
-#sorted
+td.sorted
 {
     background: rgba(255, 255, 220, 0.4);
-}
-
-#corner
-{
-    width: 300px;
-    border: none;
-    background: none;
-}
-
-#blank
-{
-    width: 10px;
-    border: none;
-    background: none;
 }
 
 th
 {
     padding: 5px;
     border: 2px solid rgb(100, 128, 100);
-    background: rgba(255, 255, 220, 0.25);
+    background: rgba(255, 255, 220, 0.35);
     font-weight: normal;
+    
+}
+
+th.unsorted
+{
+    color: #005555;
+    cursor: pointer;
+    transition: background 0.1s linear, font-size 0.1s ease;
 }
 
 th.sorted
 {
-    background: rgba(255, 255, 220, 0.45);
+    color: #000000;
+    font-weight: bold;
+    background: rgba(255, 255, 220, 0.55);
+    cursor: default;
+}
+
+th.unsorted:hover
+{
+    background: rgba(255, 255, 220, 0.5);
+    font-size: 1.03em;
 }
 
 footer
