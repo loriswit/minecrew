@@ -243,10 +243,16 @@ else
         return $players[$sortPlayer][$b] - $players[$sortPlayer][$a];
     });
 
-    $statList = array("total" => $statList["total"])
-              + array("average" => $statList["average"])
-              + array("everyHour" => $statList["everyHour"])
-              + $statList;
+    if(!isset($dates))
+        $statList = array("total" => $statList["total"])
+                  + array("everyHour" => $statList["everyHour"])
+                  + $statList;
+              
+    else
+        $statList = array("total" => $statList["total"])
+                  + array("average" => $statList["average"])
+                  + array("everyHour" => $statList["everyHour"])
+                  + $statList;
 }
 
 if($statCat  == "biomes")
@@ -280,6 +286,9 @@ echo "</tr>\n";
 
 foreach($statList as $key => $values)
 {
+    if(!isset($dates) && $key == "average")
+        continue;
+    
     if(!$config["UNUSED_STATS"] && !in_array($key , array("total", "average", "everyHour")) && array_sum(array_column($players, $key)) <= 0)
     {
         if(!isset($unlisted))
