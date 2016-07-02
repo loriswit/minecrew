@@ -28,7 +28,7 @@ function formatValue($value, $type)
                 number_format(floor($value / 72000), 0, ",", "'")." $type " : "")
                 .number_format(($value / 1200) % 60, 0, ",", "'")." min";
                 
-        case "?":
+        case "♥":
             return number_format($value / 2, $value % 2 ? 1 : 0, ",", "'")." $type";
 
         case "bool":
@@ -45,20 +45,20 @@ $statCat = isset($_GET["stat"]) ?
     $_GET["stat"] :
     "misc";
     
-$statFilename = "statlist/".$statCat.".inc";
+$statFilename = "statlist/$statCat.inc";
 
 if(!file_exists($statFilename))
 {
     $pieces = explode("_", $statCat);
     if(count($pieces) > 1)
     {
-        $statFilename = "statlist/".$pieces[1].".inc";
+        $statFilename = "statlist/$pieces[1].inc";
         if(!file_exists($statFilename))
         {
             echo "Erreur : type invalide \"$pieces[1]\" !";
             exit;
         }
-        $prefix = "stat.".$pieces[0];
+        $prefix = "stat.$pieces[0]";
         $showUnlisted = false;
     }
 
@@ -78,7 +78,7 @@ include $statFilename;
 echo "<table><tr>\n";
 $addCategory = function($name, $title) use($statCat)
 {
-    echo "<th onclick='printStats(".makeUrl($name).")'".($name == "misc" ? " rowspan=\"2\"" : "").($statCat == $name ? " class='sorted'>" : "class='unsorted'>")
+    echo "<th onclick='printStats(".makeUrl($name).")'".($name == "misc" ? " rowspan='2'" : "").($statCat == $name ? " class='sorted'>" : "class='unsorted'>")
          .$title."</th>\n";
 };
 $addCategory("misc", "Divers");
@@ -116,12 +116,14 @@ $usercache = json_decode(file_get_contents($usercacheFilename), true);
 
 $datesFilename = $config["LOCATION"]."/dates.json";
 if(file_exists($datesFilename))
+{
     $dates = json_decode(file_get_contents($datesFilename));
 
-$daysSinceFirstSeen = function($playerName) use($dates)
-{
-    return (time() - $dates->{"firstSeen"}->{$playerName}) / 86400;
-};
+    $daysSinceFirstSeen = function($playerName) use($dates)
+    {
+        return (time() - $dates->{"firstSeen"}->{$playerName}) / 86400;
+    };
+}
 
 foreach($usercache as $user)
 {
@@ -147,12 +149,12 @@ foreach($usercache as $user)
              $players[$name][$key] = $stats->{$prefix.".".$key}->{"value"};
 
         else if($key != "average")
-            $players[$name][$key] = property_exists($stats, $prefix.".".$key) ?
-                $stats->{$prefix.".".$key} :
+            $players[$name][$key] = property_exists($stats, "$prefix.$key") ?
+                $stats->{"$prefix.$key"} :
                 0;
 
-        else
-            $players[$name]["average"] = $stats->{$prefix.".playOneMinute"} / $daysSinceFirstSeen($name);
+        else if(isset($dates))
+            $players[$name]["average"] = $stats->{"$prefix.playOneMinute"} / $daysSinceFirstSeen($name);
     }
     
     $total = 0;
@@ -176,6 +178,16 @@ foreach($usercache as $user)
         $players[$name]["everyHour"] = $total / ($stats->{"stat.playOneMinute"} / 72000);
     }
 }
+
+if($statCat != "biomes")
+    foreach($players as $items)
+        foreach($items as $key => $value)
+        {
+            if(!isset($players["Total"][$key]))
+                $players["Total"][$key] = $value;
+            else
+                $players["Total"][$key] += $value;
+        }
 
 if(!isset($defaultKey))
     $statList["total"] = array("Total", $statCat == "biomes" ?
@@ -255,12 +267,14 @@ foreach(array_keys($players) as $name)
     $sorted = $name == $sortPlayer;
     echo "<th ".($sorted || isset($defaultKey) ? "" : "onclick='printStats(".makeUrl($statCat, $sortStat, $name).")'")
          .(!isset($defaultKey) && $sorted ? " class='sorted'>" : (!isset($defaultKey) && !$sorted ? " class='unsorted'>" : ">"))
-         ."$rank. "
-         
-         ."$name <img src=\"https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay\">"
-
+         .($name == "Total" ? "" : "$rank. ")
+         ."$name "
+         .($name == "Total" ? "" : "<img src='https://crafatar.com/avatars/$name?size=16&default=MHF_Steve&overlay'>")
          ."</td>";
-    $rank++;
+    if($name != "Total")
+        $rank++;
+    else
+        echo "<td class='blank'></td>";
 }
 echo "</tr>\n";
 
@@ -278,15 +292,19 @@ foreach($statList as $key => $values)
     echo "<tr>";
     
     $sorted = $key == $sortStat;
-    echo "<th title='$key' onclick='printStats(".makeUrl($statCat, $key, $sortPlayer).");' "
-        .($sorted ? " class=\"sorted\">" : "class=\"unsorted\">")
-         .$values[0]."</td>";
+    echo "<th "
+         .(in_array($key , array("total", "average", "everyHour")) ? "" : "title='$key'")
+         ."onclick='printStats(".makeUrl($statCat, $key, $sortPlayer).");' "
+         .($sorted ? " class='sorted'>" : "class='unsorted'>")
+         ."$values[0]</td>";
     
     foreach($players as $name => $player)
     {
         $sorted = $name == $sortPlayer || $key == $sortStat;
         echo "<td".($sorted ? " class='sorted'>" : ">")
              .formatValue($player[$key], $statList[$key][1])."</td>";
+        if($name == "Total")
+            echo "<td class='blank'></td>";
     }
     
     echo "</tr>\n";
