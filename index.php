@@ -39,6 +39,12 @@
                 xhttp.timeout = 2000;
                 xhttp.send();
             }
+            
+            window.setInterval(
+            function () {
+                var uptime = Math.floor(Date.now() / 1000) - parseInt(document.getElementById("stamp").innerHTML);
+                document.getElementById("uptime").innerHTML = "Uptime : " + Math.floor(uptime / 86400) + " jours " + Math.floor(uptime % 86400 / 3600) + "h " + Math.floor(uptime % 3600 / 60) + "m " + Math.floor(uptime % 60) + "s";
+            }, 1000);
         </script>
     </head>
     <body onload="init()">

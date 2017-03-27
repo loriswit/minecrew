@@ -110,6 +110,11 @@ table
     background: none;
 }
 
+.hidden
+{
+    visibility: hidden;
+}
+
 td
 {
     padding: 3px;
