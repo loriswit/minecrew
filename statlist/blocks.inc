@@ -17,6 +17,7 @@ $statList = array
     "minecraft.birch_fence" => array("Barrière de bouleau", ""),
     "minecraft.birch_fence_gate" => array("Portillon de bouleau", ""),
     "minecraft.birch_stairs" => array("Escaliers de bouleau", ""),
+    "minecraft.bone_block" => array("Bloc d'os", ""),
     "minecraft.bookshelf" => array("Bibliothèque", ""),
     "minecraft.brewing_stand" => array("Alambic", ""),
     "minecraft.brick_block" => array("Bloc de brique", ""),
