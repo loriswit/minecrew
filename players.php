@@ -24,6 +24,7 @@
         <div id="pannel_player">
             <header>
                 <h2>Comparaison des joueurs</h2>
+                <h5>Joueurs ayant joué plus d'une heure</h5>
                 <a href="/">Retour</a>
                 <br>
                 <br>

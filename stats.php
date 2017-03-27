@@ -135,6 +135,9 @@ foreach($usercache as $user)
     
     $json = file_get_contents($config["LOCATION"]."/world/stats/$uuid.json");
     $stats = json_decode($json);
+    
+    if($stats->{"stat.playOneMinute"} < 72000)
+        continue;
 
     $prefix = isset($prefix) ?
         $prefix : "stat";
